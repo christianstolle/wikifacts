@@ -5,5 +5,5 @@
     grid-template-areas:
         "header header"
         "nav main"
-        "footer main";
+        "nav footer";
 }
