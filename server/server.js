@@ -3,6 +3,7 @@ const app = express();
 const cookieSession = require("cookie-session");
 const usersRouter = require("./routers/users");
 const publicRouter = require("./routers/public");
+const apiRouter = require("./routers/api");
 const compression = require("compression");
 const path = require("path");
 
@@ -14,7 +15,8 @@ app.use(
     })
 );
 
-app.use("/api", usersRouter);
+app.use("/api", apiRouter);
+app.use("/", usersRouter);
 app.use("/", publicRouter);
 
 app.use(compression());

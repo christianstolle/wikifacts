@@ -11,11 +11,13 @@ body {
 ul {
     list-style-type: none;
     margin: 20px;
+    margin-top: 0;
     padding: 0;
 }
 
 .more-facts-button {
     margin-left: 20px;
+    margin-bottom: 20px;
     padding: 5px;
     font-size: 0.9rem;
 }
@@ -67,4 +69,41 @@ footer {
 .header-bar > *,
 footer > * {
     margin: 20px;
+}
+
+.article-edit {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 20px;
+}
+
+.article-edit form {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    width: 100%;
+}
+
+.article-edit form textarea {
+    width: 100%;
+    min-height: 300px;
+    height: 90%;
+}
+
+.article-edit .output {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.output p img,
+.output img {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.output > * {
+    margin-bottom: 10px;
+}
+
+.output ul {
+    list-style-type: initial;
 }

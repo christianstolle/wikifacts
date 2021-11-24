@@ -1,32 +1,57 @@
 /* eslint-disable indent */
-import { Slate, Editable, withReact, useSlate } from "slate-react";
-import React, { useMemo, useState, useCallback } from "react";
-import { createEditor } from "slate";
+import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+
+const markdownText = `
+# This is a document
+
+You can use **bold**, _italic_, [links](http://example.com)
+
+- this
+- is
+- a
+- list
+
+Images are nice!
+
+![A picture](https://source.unsplash.com/random)`;
+
+function getText() {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(markdownText), 500);
+    });
+}
 
 export default function Welcome() {
-    const editor = useMemo(() => withReact(createEditor()), []);
+    const [text, setText] = useState("");
 
-    const [value, setValue] = useState([
-        {
-            type: "paragraph",
-            children: [{ text: "Click here and type..." }],
-        },
-    ]);
+    useEffect(() => {
+        getText().then(setText);
+    }, []);
+
+    function onInput(event) {
+        setText(event.target.value);
+    }
+
+    function onSubmit(event) {
+        event.preventDefault();
+        console.log("Ready to save text", text);
+    }
 
     return (
-        <div>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={(newValue) => {
-                    setValue(newValue);
-                    console.log(
-                        newValue.map((paragraph) => paragraph.children[0].text)
-                    );
-                }}
-            >
-                <Editable />
-            </Slate>
+        <div className="article-edit">
+            <form onSubmit={onSubmit}>
+                <textarea
+                    onInput={onInput}
+                    value={text}
+                    onKeyUp={(newValue) => {
+                        console.log(newValue.target.lastChild);
+                    }}
+                />
+            </form>
+            <section className="output">
+                <ReactMarkdown>{text}</ReactMarkdown>
+            </section>
         </div>
     );
 }

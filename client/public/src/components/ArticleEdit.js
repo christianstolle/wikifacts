@@ -1,48 +1,52 @@
-import { Slate, Editable, withReact } from "slate-react";
-import React, { useMemo, useState } from "react";
-import { createEditor } from "slate";
+/* eslint-disable indent */
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
+import ReactMarkdown from "react-markdown";
 
-export default function ArticleEdit() {
-    const editor = useMemo(() => withReact(createEditor()), []);
+export default function Welcome() {
+    const [text, setText] = useState("");
+    const [headline, setHeadline] = useState("");
+    const { article } = useParams();
 
-    const [value, setValue] = useState([
-        {
-            type: "paragraph",
-            children: [{ text: "A line of text in a paragraph." }],
-        },
-    ]);
+    useEffect(() => {
+        (async () => {
+            const response = await fetch(`/api/${article}`);
 
-    const onClick = (event) => {
-        // Implement custom event logic...
-        // When no value is returned, Slate will execute its own event handler when
-        // neither isDefaultPrevented nor isPropagationStopped was set on the event
-    };
+            const data = await response.json();
+            if (response.status >= 500) {
+                throw data;
+            } else {
+                setText(data.content);
+                setHeadline(data.topic);
+                return;
+            }
+        })();
+    }, []);
 
-    const onDrop = (event) => {
-        // Implement custom event logic...
+    function onInput(event) {
+        setText(event.target.value);
+    }
 
-        // No matter the state of the event, treat it as being handled by returning
-        // true here, Slate will skip its own event handler
-        return true;
-    };
-
-    const onDragStart = (event) => {
-        // Implement custom event logic...
-
-        // No matter the status of the event, treat event as *not* being handled by
-        // returning false, Slate will execute its own event handler afterward
-        return false;
-    };
+    function onSubmit(event) {
+        event.preventDefault();
+        console.log("Ready to save text", text);
+    }
 
     return (
-        <div>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={(newValue) => setValue(newValue)}
-            >
-                <Editable />
-            </Slate>
+        <div className="article-edit">
+            <form onSubmit={onSubmit}>
+                <textarea
+                    onInput={onInput}
+                    value={text}
+                    onKeyUp={(newValue) => {
+                        console.log(newValue.target.lastChild);
+                    }}
+                />
+            </form>
+            <section className="output">
+                <h1>{headline}</h1>
+                <ReactMarkdown>{text}</ReactMarkdown>
+            </section>
         </div>
     );
 }

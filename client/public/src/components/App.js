@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Redirect, Switch, Link } from "react-router-dom";
 import ArticleEdit from "./ArticleEdit";
 import ArticleView from "./ArticleView";
+import CreateArticle from "./CreateArticle";
 import Menu from "./Menu";
 import RandomArticles from "./RandomArticles";
 import SearchBar from "./SearchBar";
@@ -24,10 +25,13 @@ export default function App() {
                         <Route path="/" exact>
                             <Welcome />
                         </Route>
-                        <Route path="/:article">
+                        <Route path="/participate" exact>
+                            <CreateArticle />
+                        </Route>
+                        <Route path="/:article" exact>
                             <ArticleView />
                         </Route>
-                        <Route path="/:article/edit">
+                        <Route path="/:article/edit" exact>
                             <ArticleEdit />
                         </Route>
                     </Switch>
