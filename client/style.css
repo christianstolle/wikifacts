@@ -1,7 +1,6 @@
 * {
     font-family: "Courier New", Courier, monospace;
     box-sizing: border-box;
-    margin: 5;
 }
 
 body {
@@ -14,6 +13,34 @@ body {
     align-items: center;
 }
 
+.flex-column-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.text-centered {
+    text-align: center;
+}
+
+.header-bar {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.header-bar input {
+    width: 170px;
+}
+
+.header-bar > *,
+footer > * {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 ul {
     list-style-type: none;
     margin: 20px;
@@ -22,8 +49,19 @@ ul {
     padding: 0;
 }
 
+.header-wrapper ul {
+    margin-top: -10px;
+    min-width: 170px;
+    position: absolute;
+    background-color: beige;
+    right: -2px;
+}
+
+.header-wrapper ul li {
+    background-color: beige;
+}
+
 .more-facts-button {
-    margin-bottom: 20px;
     padding: 5px;
     font-size: 0.9rem;
 }
@@ -61,21 +99,12 @@ footer {
     align-items: center;
 }
 
-.header-bar {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-bar > *,
-footer > * {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 .create-article > * {
     margin-bottom: 10px;
+}
+
+.create-article form > * {
+    margin-right: 5px;
 }
 
 .article-edit {
@@ -122,6 +151,7 @@ footer > * {
 }
 
 .output > * {
+    margin-top: 0;
     margin-bottom: 10px;
 }
 

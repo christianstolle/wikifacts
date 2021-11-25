@@ -4,6 +4,7 @@ const {
     searchTopic,
     createTopic,
     getArticleByUrlString,
+    getAllTopics,
     updateText,
 } = require("../db.js");
 
@@ -13,6 +14,24 @@ router.use(express.json());
 
 function headlinify(string) {
     return string.toUpperCase().replace("-", " ");
+}
+
+// Fisher-Yates (aka Knuth) Shuffle
+
+function shuffle(array) {
+    let currentIndex = array.length,
+        randomIndex;
+
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+        ];
+    }
+    return array;
 }
 
 if (process.env.NODE_ENV == "production") {
@@ -43,6 +62,17 @@ router.post("/create-topic/:name", async (request, response) => {
         response.json(topic);
     } catch (error) {
         console.log(`[POST api/create-topic/${request.params}]`, error);
+    }
+});
+
+router.get("/all-topics", async (request, response) => {
+    try {
+        const articleData = await getAllTopics();
+        if (articleData.length > 7) {
+            return response.json(shuffle(articleData).slice(-7));
+        } else response.json(articleData);
+    } catch (error) {
+        console.log("[GET api/all-topics]", error);
     }
 });
 

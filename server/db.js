@@ -21,10 +21,16 @@ function createTopic(string) {
 }
 
 function getArticleByUrlString(string) {
-    const topic = string.replace("-", " ");
+    const topic = string.toUpperCase().replace("-", " ");
     return db
-        .query(`SELECT * FROM articles WHERE topic ILIKE '%${topic}%'`)
+        .query(`SELECT * FROM articles WHERE topic = $1`, [topic])
         .then((result) => result.rows[0]);
+}
+
+function getAllTopics() {
+    return db
+        .query(`SELECT topic, id FROM articles`)
+        .then((result) => result.rows);
 }
 
 function updateText({ content, topic }) {
@@ -40,6 +46,7 @@ function updateText({ content, topic }) {
 module.exports = {
     searchTopic,
     createTopic,
+    getAllTopics,
     getArticleByUrlString,
     updateText,
 };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function CreateArticle() {
     document.title = "Participate";
@@ -14,55 +15,47 @@ export default function CreateArticle() {
         return string.toLowerCase().replace(" ", "-");
     }
 
-    function search(event) {
+    async function search(event) {
         event.preventDefault();
-        (async () => {
-            const response = await fetch(
-                `/api/search-topic/${event.target.searchTopic.value}`
-            );
-            const data = await response.json();
-            if (response.status >= 500) {
-                throw data;
-            } else if (data.message == "No such topics in the database") {
-                setTopicsArray([]);
-                return setNoResults(data);
-            } else {
-                setNoResults({});
-                return setTopicsArray(data);
-            }
-        })();
+        const response = await fetch(
+            `/api/search-topic/${event.target.searchTopic.value}`
+        );
+        const data = await response.json();
+        if (response.status >= 500) {
+            throw data;
+        } else if (data.message == "No such topics in the database") {
+            setTopicsArray([]);
+            return setNoResults(data);
+        } else {
+            setNoResults({});
+            return setTopicsArray(data);
+        }
     }
 
-    function create(event) {
+    async function create(event) {
         event.preventDefault();
-        (async () => {
+        const response = await fetch(
+            `/api/search-topic/${event.target.createTopic.value}`
+        );
+        const data = await response.json();
+        if (response.status >= 500) {
+            throw data;
+        } else if (data.length >= 1) {
+            setNewTopic([]);
+            return setNoTopic({
+                topic: `"${event.target.createTopic.value}" is already in the database! Search above to edit the existing article.`,
+            });
+        } else if (data.message == "No such topics in the database") {
+            setNoTopic({});
             const response = await fetch(
-                `/api/search-topic/${event.target.createTopic.value}`
+                `/api/create-topic/${urlify(event.target.createTopic.value)}`,
+                {
+                    method: "POST",
+                }
             );
             const data = await response.json();
-            if (response.status >= 500) {
-                throw data;
-            } else if (data.length >= 1) {
-                setNewTopic([]);
-                return setNoTopic({
-                    topic: `"${event.target.createTopic.value}" is already in the database! Search above to edit the existing article.`,
-                });
-            } else if (data.message == "No such topics in the database") {
-                return (async () => {
-                    setNoTopic({});
-                    const response = await fetch(
-                        `/api/create-topic/${urlify(
-                            event.target.createTopic.value
-                        )}`,
-                        {
-                            method: "POST",
-                        }
-                    );
-                    const data = await response.json();
-                    return setNewTopic([data]);
-                })();
-            }
-        })();
+            return setNewTopic([data]);
+        }
     }
 
     return (
@@ -85,7 +78,7 @@ export default function CreateArticle() {
                 topicsArray.map(({ topic, id }) => (
                     <div key={id}>
                         <p>
-                            <a href={`/${urlify(topic)}/edit`}>{topic}</a>
+                            <Link to={`/${urlify(topic)}/edit`}>{topic}</Link>
                         </p>
                     </div>
                 ))}
@@ -107,9 +100,7 @@ export default function CreateArticle() {
             {newTopic &&
                 newTopic.map(({ topic, id }) => (
                     <div key={id}>
-                        <p>
-                            <a href={`/${urlify(topic)}/edit`}>{topic}</a>
-                        </p>
+                        <Link to={`/${urlify(topic)}/edit`}>{topic}</Link>
                     </div>
                 ))}
             {noTopic && (

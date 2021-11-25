@@ -1,11 +1,41 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 export default function RandomArticles() {
+    const [randomArray, setRandomArray] = useState([]);
+
+    function urlify(string) {
+        return string.toLowerCase().replace(" ", "-");
+    }
+
+    async function getRandom(event) {
+        event.preventDefault();
+        const response = await fetch(`/api/all-topics`);
+        const data = await response.json();
+        if (response.status >= 500) {
+            throw data;
+        } else {
+            return setRandomArray(data);
+        }
+    }
+
+    useEffect(() => {
+        getRandom();
+    }, [randomArray]);
     return (
         <div>
-            <button className="more-facts-button">GET MORE FACTS</button>
+            <button onClick={getRandom} className="more-facts-button">
+                GET MORE FACTS
+            </button>
             <ul>
-                <li>ARTICLE 1</li>
-                <li>ARTICLE 2</li>
-                <li>ARTICLE 3</li>
+                {randomArray &&
+                    randomArray.map(({ topic, id }) => (
+                        <li key={id}>
+                            <p>
+                                <Link to={`/${urlify(topic)}`}>{topic}</Link>
+                            </p>
+                        </li>
+                    ))}
             </ul>
         </div>
     );

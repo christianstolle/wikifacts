@@ -7,6 +7,9 @@ export default function Menu() {
             <Link to="/participate">
                 <li>PARTCIPATE</li>
             </Link>
+            <Link to="/how-to">
+                <li>HOW TO WRITE?</li>
+            </Link>
         </ul>
     );
 }

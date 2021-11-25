@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function ArticleView() {
     const [text, setText] = useState("");
     const [headline, setHeadline] = useState("");
     const { article } = useParams();
 
-    function editButton(event) {
-        event.preventDefault();
-        location.replace(`/${article}/edit`);
-    }
+    document.title = `${headline} | WIKIFACTS`;
 
     useEffect(() => {
         (async () => {
@@ -29,9 +27,9 @@ export default function ArticleView() {
         <div className="output">
             <div className="space-between">
                 <h1>{headline}</h1>
-                <button className="edit-button" onClick={editButton}>
-                    EDIT
-                </button>
+                <Link to={`/${article}/edit`}>
+                    <button type="button">EDIT</button>
+                </Link>
             </div>
             <div className="output">{text}</div>
         </div>

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Redirect, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ArticleEdit from "./ArticleEdit";
 import ArticleView from "./ArticleView";
 import CreateArticle from "./CreateArticle";
@@ -8,6 +7,7 @@ import RandomArticles from "./RandomArticles";
 import SearchBar from "./SearchBar";
 import Welcome from "./Welcome";
 import Footer from "./Footer";
+import HowTo from "./HowTo";
 
 export default function App() {
     return (
@@ -27,6 +27,9 @@ export default function App() {
                         </Route>
                         <Route path="/participate" exact>
                             <CreateArticle />
+                        </Route>
+                        <Route path="/how-to" exact>
+                            <HowTo />
                         </Route>
                         <Route path="/:article" exact>
                             <ArticleView />

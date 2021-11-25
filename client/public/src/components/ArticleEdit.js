@@ -2,12 +2,15 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 
 export default function Welcome() {
     const [text, setText] = useState("");
     const [saved, setSaved] = useState({ text: "" });
     const [headline, setHeadline] = useState("");
     const { article } = useParams();
+
+    document.title = `EDIT: ${headline} | WIKIFACTS`;
 
     useEffect(() => {
         (async () => {
@@ -29,24 +32,16 @@ export default function Welcome() {
         setText(event.target.value);
     }
 
-    function linkButton(event) {
+    async function onSubmit(event) {
         event.preventDefault();
-        location.replace(`/${article}`);
-    }
-
-    function onSubmit(event) {
-        event.preventDefault();
-        (async () => {
-            await fetch(`/api/${article}/edit`, {
-                method: "PUT",
-                headers: { "Content-type": "application/json; charset=UTF-8" },
-                body: JSON.stringify({
-                    text: text,
-                }),
-            });
-            setSaved({ text: "SUCCESSFULLY SAVED!" });
-        })();
-        console.log("Ready to save text", text);
+        await fetch(`/api/${article}/edit`, {
+            method: "PUT",
+            headers: { "Content-type": "application/json; charset=UTF-8" },
+            body: JSON.stringify({
+                text: text,
+            }),
+        });
+        setSaved({ text: "SUCCESSFULLY SAVED!" });
     }
 
     return (
@@ -55,7 +50,9 @@ export default function Welcome() {
                 <textarea onInput={onInput} value={text} />
                 <div>
                     <button onClick={onSubmit}>SAVE</button>
-                    <button onClick={linkButton}>VIEW</button>
+                    <Link to={`/${article}`}>
+                        <button type="button">VIEW</button>
+                    </Link>
                 </div>
                 {saved && <p>{saved.text}</p>}
             </form>
