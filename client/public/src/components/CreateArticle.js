@@ -67,11 +67,11 @@ export default function CreateArticle() {
 
     return (
         <div className="create-article">
+            <p>
+                Search the database to see if there's a fact-check for the topic
+                you're interested in, or create a new one.
+            </p>
             <form onSubmit={search}>
-                <p>
-                    Search the database to see if there's a fact-check for the
-                    topic you're interested in, or create a new one.
-                </p>
                 <label>SEARCH:</label>
                 <input
                     type="text"
@@ -80,20 +80,20 @@ export default function CreateArticle() {
                     required
                 />
                 <button type="submit">SEARCH</button>
-                {topicsArray &&
-                    topicsArray.map(({ topic, id }) => (
-                        <div key={id}>
-                            <p>
-                                <a href={`/${urlify(topic)}/edit`}>{topic}</a>
-                            </p>
-                        </div>
-                    ))}
-                {noResults && (
-                    <div>
-                        <p>{noResults.message}</p>
-                    </div>
-                )}
             </form>
+            {topicsArray &&
+                topicsArray.map(({ topic, id }) => (
+                    <div key={id}>
+                        <p>
+                            <a href={`/${urlify(topic)}/edit`}>{topic}</a>
+                        </p>
+                    </div>
+                ))}
+            {noResults && (
+                <div>
+                    <p>{noResults.message}</p>
+                </div>
+            )}
             <form onSubmit={create}>
                 <label>CREATE:</label>
                 <input
@@ -103,20 +103,20 @@ export default function CreateArticle() {
                     required
                 />
                 <button type="submit">CREATE</button>
-                {newTopic &&
-                    newTopic.map(({ topic, id }) => (
-                        <div key={id}>
-                            <p>
-                                <a href={`/${urlify(topic)}/edit`}>{topic}</a>
-                            </p>
-                        </div>
-                    ))}
-                {noTopic && (
-                    <div>
-                        <p>{noTopic.topic}</p>
-                    </div>
-                )}
             </form>
+            {newTopic &&
+                newTopic.map(({ topic, id }) => (
+                    <div key={id}>
+                        <p>
+                            <a href={`/${urlify(topic)}/edit`}>{topic}</a>
+                        </p>
+                    </div>
+                ))}
+            {noTopic && (
+                <div>
+                    <p>{noTopic.topic}</p>
+                </div>
+            )}
         </div>
     );
 }
