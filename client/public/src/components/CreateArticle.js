@@ -5,7 +5,10 @@ export default function CreateArticle() {
 
     const [topicsArray, setTopicsArray] = useState([]);
     const [noResults, setNoResults] = useState({});
-    useEffect(() => {}, [topicsArray, noResults]);
+    const [noTopic, setNoTopic] = useState({});
+    const [newTopic, setNewTopic] = useState([]);
+
+    useEffect(() => {}, [topicsArray, noResults, newTopic]);
 
     function urlify(string) {
         return string.toLowerCase().replace(" ", "-");
@@ -15,9 +18,8 @@ export default function CreateArticle() {
         event.preventDefault();
         (async () => {
             const response = await fetch(
-                `/api/search-topic/${event.target.input.value}`
+                `/api/search-topic/${event.target.searchTopic.value}`
             );
-
             const data = await response.json();
             if (response.status >= 500) {
                 throw data;
@@ -31,27 +33,53 @@ export default function CreateArticle() {
         })();
     }
 
+    function create(event) {
+        event.preventDefault();
+        (async () => {
+            const response = await fetch(
+                `/api/search-topic/${event.target.createTopic.value}`
+            );
+            const data = await response.json();
+            if (response.status >= 500) {
+                throw data;
+            } else if (data.length >= 1) {
+                setNewTopic([]);
+                return setNoTopic({
+                    topic: `"${event.target.createTopic.value}" is already in the database! Search above to edit the existing article.`,
+                });
+            } else if (data.message == "No such topics in the database") {
+                return (async () => {
+                    setNoTopic({});
+                    const response = await fetch(
+                        `/api/create-topic/${urlify(
+                            event.target.createTopic.value
+                        )}`,
+                        {
+                            method: "POST",
+                        }
+                    );
+                    const data = await response.json();
+                    return setNewTopic([data]);
+                })();
+            }
+        })();
+    }
+
     return (
-        <div>
+        <div className="create-article">
             <form onSubmit={search}>
                 <p>
                     Search the database to see if there's a fact-check for the
-                    topic you're interested in.
-                </p>
-                <p>
-                    <br />
+                    topic you're interested in, or create a new one.
                 </p>
                 <label>SEARCH:</label>
                 <input
                     type="text"
-                    name="input"
+                    name="searchTopic"
                     placeholder="Enter topic..."
                     required
                 />
                 <button type="submit">SEARCH</button>
-                <p>
-                    <br />
-                </p>
                 {topicsArray &&
                     topicsArray.map(({ topic, id }) => (
                         <div key={id}>
@@ -63,6 +91,29 @@ export default function CreateArticle() {
                 {noResults && (
                     <div>
                         <p>{noResults.message}</p>
+                    </div>
+                )}
+            </form>
+            <form onSubmit={create}>
+                <label>CREATE:</label>
+                <input
+                    type="text"
+                    name="createTopic"
+                    placeholder="Enter topic..."
+                    required
+                />
+                <button type="submit">CREATE</button>
+                {newTopic &&
+                    newTopic.map(({ topic, id }) => (
+                        <div key={id}>
+                            <p>
+                                <a href={`/${urlify(topic)}/edit`}>{topic}</a>
+                            </p>
+                        </div>
+                    ))}
+                {noTopic && (
+                    <div>
+                        <p>{noTopic.topic}</p>
                     </div>
                 )}
             </form>

@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 
 export default function Welcome() {
     const [text, setText] = useState("");
+    const [saved, setSaved] = useState({ text: "" });
     const [headline, setHeadline] = useState("");
     const { article } = useParams();
 
@@ -24,24 +25,39 @@ export default function Welcome() {
     }, []);
 
     function onInput(event) {
+        setSaved({ text: "" });
         setText(event.target.value);
+    }
+
+    function linkButton(event) {
+        event.preventDefault();
+        location.replace(`/${article}`);
     }
 
     function onSubmit(event) {
         event.preventDefault();
+        (async () => {
+            await fetch(`/api/${article}/edit`, {
+                method: "PUT",
+                headers: { "Content-type": "application/json; charset=UTF-8" },
+                body: JSON.stringify({
+                    text: text,
+                }),
+            });
+            setSaved({ text: "SUCCESSFULLY SAVED!" });
+        })();
         console.log("Ready to save text", text);
     }
 
     return (
         <div className="article-edit">
-            <form onSubmit={onSubmit}>
-                <textarea
-                    onInput={onInput}
-                    value={text}
-                    onKeyUp={(newValue) => {
-                        console.log(newValue.target.lastChild);
-                    }}
-                />
+            <form>
+                <textarea onInput={onInput} value={text} />
+                <div>
+                    <button onClick={onSubmit}>SAVE</button>
+                    <button onClick={linkButton}>VIEW</button>
+                </div>
+                {saved && <p>{saved.text}</p>}
             </form>
             <section className="output">
                 <h1>{headline}</h1>

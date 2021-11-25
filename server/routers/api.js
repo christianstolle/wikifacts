@@ -1,7 +1,19 @@
 const { Router } = require("express");
-const { searchTopic, getArticleByUrlString } = require("../db.js");
+const express = require("express");
+const {
+    searchTopic,
+    createTopic,
+    getArticleByUrlString,
+    updateText,
+} = require("../db.js");
 
 const router = Router();
+
+router.use(express.json());
+
+function headlinify(string) {
+    return string.toUpperCase().replace("-", " ");
+}
 
 if (process.env.NODE_ENV == "production") {
     router.use((request, response, next) => {
@@ -20,7 +32,17 @@ router.get("/search-topic/:name", async (request, response) => {
         }
         response.json(topics);
     } catch (error) {
-        console.log(`[GET /search-topic/${request.params}]`, error);
+        console.log(`[GET api/search-topic/${request.params}]`, error);
+    }
+});
+
+router.post("/create-topic/:name", async (request, response) => {
+    try {
+        const { name } = request.params;
+        const topic = await createTopic(headlinify(name));
+        response.json(topic);
+    } catch (error) {
+        console.log(`[POST api/create-topic/${request.params}]`, error);
     }
 });
 
@@ -33,7 +55,20 @@ router.get("/:article", async (request, response) => {
         }
         response.json(articleData);
     } catch (error) {
-        console.log(`[GET /${request.params}`, error);
+        console.log(`[GET api/${request.params}`, error);
+    }
+});
+
+router.put("/:article/edit", async (request, response) => {
+    try {
+        const { article } = request.params;
+        const updatedArticle = await updateText({
+            content: request.body.text,
+            topic: headlinify(article),
+        });
+        response.json(updatedArticle);
+    } catch (error) {
+        console.log(`[PUT api/${request.params}/edit`, error);
     }
 });
 

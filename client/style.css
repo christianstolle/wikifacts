@@ -1,22 +1,28 @@
 * {
     font-family: "Courier New", Courier, monospace;
     box-sizing: border-box;
-    margin: 0;
+    margin: 5;
 }
 
 body {
     background-color: ghostwhite;
 }
 
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 ul {
     list-style-type: none;
     margin: 20px;
+    margin-left: 0;
     margin-top: 0;
     padding: 0;
 }
 
 .more-facts-button {
-    margin-left: 20px;
     margin-bottom: 20px;
     padding: 5px;
     font-size: 0.9rem;
@@ -37,25 +43,21 @@ li {
 
 header {
     grid-area: 1 / 1 / 2 / 3;
-    border: 1px solid black;
 }
 
 nav {
     grid-area: 2 / 1 / 4 / 2;
-    border: 1px solid black;
 }
 
 main {
     grid-area: 2 / 2 / 3 / 3;
-    border: 1px solid black;
 }
 
 footer {
     grid-area: 3 / 2 / 4 / 3;
-    border: 1px solid black;
     height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -68,7 +70,12 @@ footer {
 
 .header-bar > *,
 footer > * {
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.create-article form > * {
+    margin-bottom: 10px;
 }
 
 .article-edit {
@@ -81,6 +88,20 @@ footer > * {
     grid-column-start: 1;
     grid-column-end: 2;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.article-edit form div button {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+.article-edit form > * {
+    margin-bottom: 10px;
 }
 
 .article-edit form textarea {
@@ -106,4 +127,9 @@ footer > * {
 
 .output ul {
     list-style-type: initial;
+}
+
+.edit-button {
+    padding: 5px;
+    font-size: 0.9rem;
 }
