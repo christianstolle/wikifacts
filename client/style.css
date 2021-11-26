@@ -155,6 +155,16 @@ footer {
     margin-bottom: 10px;
 }
 
+.output > ul {
+    margin-left: 15px;
+}
+
+.output h1 {
+    padding: 0;
+    padding-bottom: 10px;
+    margin: 0;
+}
+
 .output ul {
     list-style-type: initial;
 }

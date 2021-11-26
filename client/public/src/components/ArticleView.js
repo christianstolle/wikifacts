@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 
 export default function ArticleView() {
@@ -22,7 +23,7 @@ export default function ArticleView() {
                 return;
             }
         })();
-    }, []);
+    }, [article]);
     return (
         <div className="output">
             <div className="space-between">
@@ -31,7 +32,9 @@ export default function ArticleView() {
                     <button type="button">EDIT</button>
                 </Link>
             </div>
-            <div className="output">{text}</div>
+            <div className="output">
+                <ReactMarkdown>{text}</ReactMarkdown>
+            </div>
         </div>
     );
 }

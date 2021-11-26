@@ -8,9 +8,8 @@ export default function RandomArticles() {
         return string.toLowerCase().replace(" ", "-");
     }
 
-    async function getRandom(event) {
-        event.preventDefault();
-        const response = await fetch(`/api/all-topics`);
+    async function getRandom() {
+        const response = await fetch("/api/all-topics");
         const data = await response.json();
         if (response.status >= 500) {
             throw data;
@@ -21,7 +20,7 @@ export default function RandomArticles() {
 
     useEffect(() => {
         getRandom();
-    }, [randomArray]);
+    }, []);
     return (
         <div>
             <button onClick={getRandom} className="more-facts-button">

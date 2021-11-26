@@ -8,6 +8,11 @@ export default function SearchBar() {
         return string.toLowerCase().replace(" ", "-");
     }
 
+    function onClickLink() {
+        const input = document.getElementById("search");
+        setResultsArray([]);
+        return (input.value = "");
+    }
     async function searchTopics() {
         const input = document.getElementById("search");
 
@@ -42,7 +47,12 @@ export default function SearchBar() {
                 {resultsArray &&
                     resultsArray.map(({ topic, id }) => (
                         <li key={id}>
-                            <a href={`/${urlify(topic)}`}>{topic}</a>
+                            <Link
+                                onClick={onClickLink}
+                                to={`/${urlify(topic)}`}
+                            >
+                                {topic}
+                            </Link>
                         </li>
                     ))}
             </ul>
